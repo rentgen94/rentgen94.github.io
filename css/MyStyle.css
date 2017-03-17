@@ -4,8 +4,8 @@ body, html {
 }
 
 body {
-    background-color: white;
-	font-size: 100%'
+    background-color: red;
+	font-size: 100%;
 }
 
 .bg {
@@ -20,6 +20,7 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
 }
+
 
 a:link {
 	text-decoration:none;
