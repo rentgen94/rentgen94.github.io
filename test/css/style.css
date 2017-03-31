@@ -18,7 +18,16 @@
       margin-bottom: 30px;
   }  
   .jumbotron {
-      background-color: #f4511e;
+      background-image: url('/test/images/map.jpg');
+
+      /* Full height */
+      /*height: 100%; 
+
+      /* Center and scale the image nicely */
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      /*background-color: #f4511e;*/
       color: #fff;
       padding: 100px 25px;
       font-family: Montserrat, sans-serif;
