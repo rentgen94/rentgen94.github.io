@@ -1,0 +1,219 @@
+#include <stdio.h>
+#include <string>
+#include <string.h>
+#include <libpq-fe.h>
+#include <map>
+#include <vector>
+#include <stdlib.h>
+#include <cstdlib>
+#include <boost/algorithm/string.hpp>
+#include <iostream>
+#include "pugixml.hpp"
+#include <TShemBlock.h>
+#include <TShemFunctionalArea.h>
+#include <version.h>
+#include <interfaces.h>
+#include <TStates.h>
+#include <TModelConstructor.h>
+#include "tech_udp_server.h"
+void replace_all(std::string& str, const std::string& from, const std::string& to);
+float model_time = 0.0f;
+std::string SQL_SET_SCHEMA("set schema '$SCHEMA_TECH$'");
+std::string SQL_UDP_SERVER_CONFIG("SELECT DISTINCT a.abonent_id FROM abonents a NATURAL JOIN pages p "
+	"natural join functionpages fp "
+		"where a.abonent_id >= 0 and (a.abonent_name LIKE $CURRENT_FGC$ or p.page_kks IN ($CURRENT_KKS$) or p.page_kks IN ($CURRENT_FILTER$)) "
+			"GROUP BY a.abonent_id ORDER BY a.abonent_id");
+std::string INFO_HELP = "Use 'techgen.exe ?' for getting information";
+int main(int argc, char ** argv) {
+	std::string current_schema = "";
+	std::string current_host = "127.0.0.1";
+	std::string current_port = "5432";
+	std::string current_user = "reader";
+	char pwd[128];
+	int x = snprintf(pwd, 127, "E03441jf6qaijase");	//реальный пароль E03441jf6qaijasd - отличие в последней букве
+	pwd[x - 1]--;									//коррекция символа (от хакеров)
+	std::string current_pwd(pwd);
+	std::string current_fgc = "'ZZZZZZZ'";
+	std::string current_kks = "'ZZZZZZZ'";
+	std::string current_filter = "'ZZZZZZZ'";
+	//информация для генарции кода модели
+	std::string full_path_to_model = "";
+	//папка нахождения файла techgen.exe
+	std::string full_path_to_techgen = "";
+	//Флаг fp_ismodified. true,false, если переделать всё, true, если надо выбрать, что перегенерировать
+	std::string fp_ismodified = " fp.fp_ischecked = true and ";
+	int current_project = -1;
+	//Открываем файл конфигурации для SimuST, который находится во временной папке
+	std::ifstream simust_cfg;	
+	#ifdef _WINDOWS
+	std::string appdata = std::getenv("APPDATA");
+	simust_cfg.open(appdata + "/VNIIA/GET-R1/simust.cfg");
+	#else
+	simust_cfg.open("~/.VNIIA/GET-R1/simust.cfg");
+	#endif
+	while (simust_cfg.is_open() && !simust_cfg.eof()) {
+		std::string l = "";
+		std::getline(simust_cfg, l);
+		std::vector<std::string> cfgs;
+		boost::split(cfgs, l, boost::is_any_of("="));
+		std::string key = cfgs[0];
+		std::string val = "";
+		for (int idx_v = 1; idx_v < cfgs.size(); idx_v++)
+			val += cfgs[idx_v];
+		if (val.length() > 0) {
+			if (key == "h")
+				current_host = val;
+			else if (key == "port")
+				current_port = val;
+			else if (key == "u")
+				current_user = val;
+			else if (key == "p")
+				current_pwd = val;
+			if (key == "s")
+				current_schema = val;
+			if (key == "k") {
+				current_kks = "";
+				std::vector<std::string> strs;
+				boost::split(strs, val, boost::is_any_of(","));
+				for (std::string k : strs)
+					current_kks += ("'" + k + "',");
+				current_kks = current_kks.substr(0, current_kks.length() - 1);
+			}
+			if (key == "g") {
+				current_fgc = "";
+				std::vector<std::string> strs;
+				boost::split(strs, val, boost::is_any_of(","));
+				for (std::string g : strs)
+					current_fgc += ("'" + g + "',");
+				current_fgc = current_fgc.substr(0, current_fgc.length() - 1);
+			}
+			if (key == "l")
+				current_filter = val;
+			if (key == "a") {
+				try {
+					int _project_id = atoi(val.c_str());
+					current_project = _project_id;
+				}
+				catch (...) {
+					LOG_INFO("Неправильно указан номер проекта");
+				}
+			}
+		}
+	}
+	simust_cfg.close();
+	const char *keywords[] = { "host", "port", "dbname", "user", "password", NULL };
+	const char *values[] = { current_host.c_str(), current_port.c_str(), "getdb", current_user.c_str(), current_pwd.c_str(), NULL };
+	//Создание подключения к БД
+	PGconn * conn = PQconnectdbParams(keywords, values, 0);
+	try {
+		if (PQstatus(conn) != CONNECTION_OK) {
+			char msg[256];
+			snprintf(msg, 255, "Connection to database failed: %s\n", PQerrorMessage(conn));
+			LOG_INFO(msg);
+			PQfinish(conn);
+			return 0;
+		}
+	}
+	catch (std::exception) {
+		printf("Ошибка при подключении к БД");
+	}
+	try
+	{
+		//Установка схемы
+		{
+			std::string sql = SQL_SET_SCHEMA;
+			replace_all(sql, "$SCHEMA_TECH$", current_schema.c_str());
+			PQexec(conn, sql.c_str());
+		}
+		//Создание и построение графа
+		TShemFunctionalAreaPtr current_area(new TShemFunctionalArea());
+		TModelConstructor constructor(current_area, current_kks, current_fgc, current_filter, fp_ismodified, conn);
+		//Создание и построение графа
+		constructor.CreateModelByGraph();
+		//Добавляем названия входных портов
+		constructor.AddInFBPort();
+		//Добавляем параметры блоков
+		constructor.AddFBParameters();
+		//Добавляем отдельно параметры входных коннекторов
+		constructor.AddPageleftParameters();
+		//Добавляем отдельно параметры выходных коннекторов
+		constructor.AddPagerightParameters();
+		//Создание моделей по информации из технологической БД
+		constructor.CreateTechdbelementModel();
+		//Создание связей между блоками
+		constructor.CreateConnections();
+		//Загрузка конфигурации UDP сервера
+		{
+			PGresult *res_config;
+			std::string sql_config = SQL_UDP_SERVER_CONFIG;
+			replace_all(sql_config, "$CURRENT_KKS$", current_kks.c_str());
+			replace_all(sql_config, "$CURRENT_FGC$", current_fgc.c_str());
+			replace_all(sql_config, "$CURRENT_FILTER$", current_filter.c_str());
+			replace_all(sql_config, "$FP_ISMODIFIED$", fp_ismodified.c_str());
+			res_config = PQexec(conn, sql_config.c_str());
+			if (PQresultStatus(res_config) != PGRES_TUPLES_OK)
+			{
+				char msg[256];
+				snprintf(msg, 255, "failed(%s): %s", PQerrorMessage(conn), sql_config.c_str());
+				LOG_INFO(msg);
+				PQclear(res_config);
+				return 0;
+			}
+			int n_config = PQntuples(res_config);
+			std::ostringstream config;
+			config << "\tSCHEMA=" << current_schema;
+			for (int r = 0; r < n_config; r++) {
+				int abonent_id = atoi(PQgetvalue(res_config, r, 0));
+				config << "\tABONENT=" << abonent_id << "\0" << "\tSESSIONKEY=FFFFFFFFFFFFFFFFFFFFFFFF" << "\0";
+			}
+			_udp_server_obj.SetConfig(config.str());
+			_udp_server_obj.SetCountFgc(n_config);
+		}
+		PQfinish(conn);
+		for (;;) {
+			_udp_server_obj.get();
+			switch (_udp_server_obj.current_cmd) {
+			case STEP:
+			{
+				int count_steps = _udp_server_obj.deltat / 0.1f;
+				for (int idx_step = 0; idx_step < count_steps; idx_step++) {
+					while (current_area->HasNext()) {
+						TShemBlockPtr current_block = current_area->Next();
+						if (current_block != NULL)
+							current_block->Step(0.1f);
+					}
+					model_time += 0.1f;
+				}
+			}
+			break;
+			case SAVE_IC:
+			{
+				//Сохранить состояние
+				TStates::SaveState(current_area, _udp_server_obj.file_state_full_path);
+			}
+			break;
+			case LOAD_IC:
+			{
+				//Сохранить состояние
+				TStates::LoadState(current_area, _udp_server_obj.file_state_full_path);
+			}
+			break;
+			case UNLOAD:
+				boost::this_thread::sleep(boost::posix_time::milliseconds(5000));
+				return 0;
+			default:
+				break;
+			}
+			_udp_server_obj.current_cmd = NOTHING;
+			// Если не пришло сообщение от Лехи в течении 10 секунд закрыть simust
+			if (_udp_server_obj.is_lost_connection()) {
+				return 0;
+			}
+		}
+	}
+	catch (const char * e)
+	{
+		LOG_INFO(e);
+	}
+	return 0;
+}
