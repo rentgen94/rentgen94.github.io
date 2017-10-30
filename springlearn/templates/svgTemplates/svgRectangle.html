@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>                                                                 
+		<title>RectangleTemplate</title>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Content-Type" content="text/html" />
+	</head>
+<body>
+	<svg height="400px" width="400px">
+		<g x="0" y="0" width="200" height="200">
+			<rect x="0" y="0" width="200px" height="200px" fill="grey" 
+								 th:fragment="svgText (attrs)" 
+								 th:attr="${attrs.containsKey('attr')} ? __${attrs.get('attr')}__">
+			</rect>
+		</g>
+	</svg>
+</body>
+</html>

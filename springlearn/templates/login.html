@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Spring Security Tutorial</title>
+    <meta http-equiv="Content-Type" content="text/html" />
+    <meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="../static/assets/css/login.css" th:href="@{/assets/css/login.css}" />
+	<script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+	<script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+	<link rel="stylesheet" type="text/css" href="../static/assets/css/bootstrap.min.css" th:href="@{/assets/css/bootstrap.min.css}"/>
+</head>
+
+<body>
+	<div class="container">
+		<div class="col-md-4 col-md-offset-4 well">
+			<img th:src="@{/assets/images/logo-m.png}" class="img-responsive center-block" width="150" height="160" alt="Logo" />
+			<form th:action="@{/login}" method="POST" class="form-signin">
+				<h3 class="form-signin-heading text-center" th:text="Welcome"></h3>
+				<br />
+				 
+				<input type="text" id="email" name="email"  th:placeholder="Email"
+					class="form-control" /> <br/> 
+				<input type="password"  th:placeholder="Password"
+					id="password" name="password" class="form-control" /> <br /> 
+					
+				<div align="center" th:if="${param.error}">
+					<p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
+				</div>
+				<button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit" th:text="Login"></button>
+			</form>
+			<form id="regForm" th:action="@{/registration}" method="get">
+				<button class="btn btn-md btn-warning btn-block" type="Submit">Go To Registration Page</button>
+			</form>	
+			<a id="tryDemo" class="btn btn-lg btn-primary btn-block" href="/svg" th:text="${'Try Demo'}">Try Demo</a>
+		</div>
+	</div>
+</body>
+</html>

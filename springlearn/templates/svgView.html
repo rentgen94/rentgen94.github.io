@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html" />
+    <meta charset="UTF-8" />
+</head>
+<body>
+<h1 th:text="#{home.welcome}">This is strange text...</h1>
+<p th:text="${webSocketUrl}"></p>
+<svg width="400px" height="400px" th:remove="all-but-first">
+	<g 
+		th:id="${''}" 
+		th:each="figure : ${fragments}" 
+		th:classappend="${figure.arguments.containsKey('parentClass')} ? ${figure.arguments.get('parentClass')}">
+	<g th:replace="${figure.templateName} :: ${figure.fragmentName}(${figure.arguments})" >
+			<rect x="0" y="0" width="200px" height="200px" fill="grey"></rect>
+		</g>
+	</g>
+	<g x="200" y="200" width="200" height="200">
+		<rect x="200" y="200" width="200px" height="200px" fill="grey">
+		</rect>
+	</g>
+</svg>
+</body>
+</html>

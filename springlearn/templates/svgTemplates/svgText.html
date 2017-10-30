@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>                                                                 
+	</head>
+<body>
+
+	<!--svg height="200px" width="200px" th:fragment="svgText (attrs)">
+		<text id="demo" x="0" y="15" style="fill: red;">I love SVG!</text>
+		<text id="demo" x="0" y="55" 
+							  th:attrappend="onclick=${'alert(''Wow'')'}"
+							  th:attr="${attrs}"
+			th:styleappend="'fill: red;'">I love SVG!</text>
+			Sorry, your browser does not support inline SVG.
+	</svg-->
+	<svg height="400px" width="400px">
+		<g x="200" y="200" width="200" height="200" 
+								 th:fragment="svgText (attrs)" 
+								 th:attr="${attrs.containsKey('attr')} ? __${attrs.get('attr')}__">
+			<rect x="200" y="200" width="200px" height="200px" fill="grey" 
+							     th:attr="${attrs.containsKey('attr')} ? __${attrs.get('attr')}__">
+			</rect>
+			<text th:text="${attrs.containsKey('style')} ? 'Style founded' : 'Style NOT	founded'"></text>
+		</g>
+	</svg>
+<!--g th:fragment="svgText (attrs)">
+<text th:text="${attrs}">Lala</text>
+</g-->
+</body>
+</html>

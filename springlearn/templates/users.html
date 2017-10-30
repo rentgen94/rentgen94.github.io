@@ -1,0 +1,18 @@
+﻿<html>
+<body>
+    <h2>Currently logged in users</h2>
+    <div th:each="user : ${users}">
+        <p th:text="${user}">user</p>
+    </div>
+	<table>
+		<tr>
+			<th>WebSocket Adress</th>
+			<th>Status</th>
+		</tr>
+		<tr th:each="url : ${urls}">
+			<td th:text="${url.getKey()}"></td>
+			<td th:text="${url.getValue() ? 'свободен' : 'занят'}"></td>
+		</tr>
+	</table>
+</body>
+</html>

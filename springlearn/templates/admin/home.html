@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Admin Page</title>
+    <meta http-equiv="Content-Type" content="text/html" />
+    <meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="../static/assets/css/admin/home.css" th:href="@{/assets/css/admin/home.css}" />
+	<script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+	<script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+	<link rel="stylesheet" type="text/css" href="../static/assets/css/bootstrap.min.css" th:href="@{/assets/css/bootstrap.min.css}"/>
+</head>
+
+<body>
+	<div class="container">
+	
+		<form th:action="@{/logout}" method="get">
+			<button class="btn btn-md btn-danger btn-block" name="registration"
+				type="Submit">Logout</button>
+		</form>    
+		
+		<div class="panel-group" style="margin-top:40px">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<span th:utext="${userName}"></span>
+				</div>
+			</div>
+		</div>
+
+		<h2>Currently logged in users</h2>
+		<div class="col-md-12 table-responsive">
+			<table class="table table-bordered">
+				<tr>
+					<th>Name</th>
+					<th>Last Name</th>
+					<th>Email</th>
+					<th>Role</th>
+					<th>WebSocket</th>
+					<th></th>
+				</tr>
+				<tr th:each="user : ${users}">
+					<td class="text-center" th:text="${user.getName()}"></td>
+					<td class="text-center" th:text="${user.getLastName()}"></td>
+					<td class="text-center" th:text="${user.getEmail()}"></td>
+					<td>
+						<ul class="list-group">
+							<!--/*/ <th:block
+								th:each="role : ${user.getRoles()}" 
+							> /*/-->
+							<li class="list-group-item text-center" th:text="${role.getRole()}"></li>
+							<!--/*/ </th:block> /*/-->
+						</ul>	
+					</td>
+					<td class="text-center" th:text="${user.getWebSocketUrl()}"></td>
+					<td>
+						<form method="POST" action="#" th:action="@{/invalidateSession}">
+							<div class="col-md-12 text-center">
+								<button class="btn btn-warning" 
+									type="submit" name="email" 
+									th:value="${user.getEmail()}"
+									th:text="${'Освободить сокет'}"
+								></button>
+							</div>
+						</form>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<h2>Websockets status</h2>
+		<div class="col-md-12 table-responsive">
+			<table class="table">
+				<tr>
+					<th>Websocket adress</th>
+					<th>Status</th>
+				</tr>
+				<tr th:each="url : ${urls}">
+					<td th:text="${url.getKey()}"></td>
+					<td class="alert" 
+						th:text="${url.getValue() ? 'свободен' : 'занят'}"
+						th:classappend="${url.getValue() ? 'alert-success' : 'alert-danger'}"
+					></td>
+				</tr>
+			</table>
+		</div>
+		
+	</div>
+</body>
+</html>

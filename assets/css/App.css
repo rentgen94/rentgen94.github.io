@@ -1,0 +1,32 @@
+html, body {
+    background-color: #f1f1f1;
+}
+
+h1 {
+    color: red;
+}
+
+.image {
+    text-align: center;
+}
+
+.navBar {
+    /*background-color: lightblue;*/
+    padding: 0 8px;
+}
+
+.context {
+    /*background-color: yellow;*/
+    padding: 0 8px;
+}
+
+.margin {
+    margin-top: 16px;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.maxGridWidth {
+    max-width: 1400px;
+    min-width: 178px;
+}

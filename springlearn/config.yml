@@ -1,0 +1,38 @@
+﻿spring:
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/testdb
+        username: postgres
+        password: Qwerty456
+        testWhileIdle: true
+        validationQuery: SELECT 1
+
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+            naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+
+    queries:
+        users-query: select email, password, active from users where email=?
+        roles-query: select u.email, r.role from users u inner join user_role ur on(u.user_id=ur.user_id) inner join role r on(ur.role_id=r.role_id) where u.email=?
+
+    resources:
+        static-locations: file:../rentgen94.github.io/springlearn/static/
+    thymeleaf:
+        prefix: file:../rentgen94.github.io/springlearn/templates/
+        encoding: UTF-8
+        cache: false
+    messages:
+        basename: file:../rentgen94.github.io/springlearn/locale/test
+server:
+    defaultWebSocket: localhost:9002
+    port: 9000
+    context-path: ""
+
+sessionMaxInactiveTime: 120
+sessionAttributeName: loggedUser
+cookieWebSocketName: webSocketUrl
