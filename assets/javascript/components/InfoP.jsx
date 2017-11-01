@@ -1,6 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class InfoP extends React.Component {
+    static propTypes = {
+        imgClass: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        isBold: PropTypes.bool,
+    }
+
+    static defaultProps = {
+        isBold: false,
+    }
+
     constructor(props) {
         super(props);
         this.state = { isBold: this.props.isBold !== undefined };

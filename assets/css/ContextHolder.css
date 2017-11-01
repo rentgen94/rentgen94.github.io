@@ -9,18 +9,8 @@
     padding: 16px 0;
 }
 
-.workExp i {
+.card i {
     color: #009688;
     font-size: 1.4em;
     margin-right: 16px;
-}
-
-.education i {
-    color: #009688;
-    font-size: 1.4em;
-    margin-right: 16px;
-}
-
-.contextItem {
-    padding: 0.01em 16px;
 }

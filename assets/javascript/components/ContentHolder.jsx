@@ -2,8 +2,11 @@ import React from 'react';
 import classNames from 'classnames/bind';
 import { Grid, Row, Col } from 'react-bootstrap';
 import styles from '../../css/ContextHolder.css';
+import ContentItem from './ContentItem';
+import TimeLine from './TimeLine';
 
 const gridStyles = classNames(styles.card);
+const workExp1 = 'Create modal dialogs for CAD GETR-1 with JavaFX. Support and modification tech-elements library for visualization technological-algorithms. Develop web-server on Spring for web-algorithms-visualization.';
 
 class ContentHolder extends React.Component {
     render() {
@@ -17,20 +20,14 @@ class ContentHolder extends React.Component {
                         </h2>
                         <Row>
                             <Col xs={ 12 }>
-                                <div className={ styles.contextItem }>
-                                    <h5><b>Front End Developer / w3schools.com</b></h5>
-                                    <h6>
-                                        <i className="fa fa-calendar fa-fw" />
-                                        Jan 2015 - <span>Current</span>
-                                    </h6>
-                                    <p>
-                                        Lorem ipsum dolor sit amet. 
-                                        Praesentium magnam consectetur vel 
-                                        in deserunt aspernatur est reprehenderit sunt hic.
-                                        Nulla tempora soluta ea et odio, unde doloremque
-                                        repellendus iure, iste.</p>
-                                    <hr />
-                                </div>
+                                <ContentItem
+                                    header="Java Developer / MEPhI National Research Nuclear University"
+                                    start="March 2014"
+                                    finish="Current"
+                                    secondInLabel
+                                    text={ workExp1 }
+                                    hr
+                                />
                             </Col>
                         </Row>
                     </Col>
@@ -42,16 +39,8 @@ class ContentHolder extends React.Component {
                             Education
                         </h2>
                         <Row>
-                            <Col xs={ 12 }>
-                                <div className={ styles.contextItem }>
-                                    <h5><b>W3Schools.com</b></h5>
-                                    <h6>
-                                        <i className="fa fa-calendar fa-fw" />
-                                        Forever
-                                    </h6>
-                                    <p>Web Development! All I need to know in one place</p>
-                                    <hr />
-                                </div>
+                            <Col xs={ 12 } style={ { paddingBottom: '16px' } }>
+                                <TimeLine />
                             </Col>
                         </Row>
                     </Col>

@@ -1,16 +1,31 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, ProgressBar } from 'react-bootstrap';
 import styles from '../../css/SkillProgress.css';
 
 class SkillProgress extends React.Component {
+    static propTypes = {
+        name: PropTypes.string.isRequired,
+        progress: PropTypes.number.isRequired,
+        header: PropTypes.bool,
+        active: PropTypes.bool,
+        showLabel: PropTypes.bool,
+    }
+
+    static defaultProps = {
+        header: false,
+        active: false,
+        showLabel: false,
+    }
+
     render() {
         const localProgress = (
             <ProgressBar>
                 <ProgressBar
                     className={ styles.customProgress }
-                    active
+                    active={ this.props.active }
                     now={ this.props.progress }
-                    label={ `${this.props.progress}%` }
+                    label={ this.props.showLabel ? `${this.props.progress}%` : false }
                 />
             </ProgressBar>
         );

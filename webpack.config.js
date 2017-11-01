@@ -9,20 +9,25 @@ module.exports = {
     context: `${__dirname}/assets`,
     output: {
         path: (NODE_ENV === 'development') ? `${__dirname}/static/build` : `${__dirname}/final`,
-        filename: NODE_ENV === 'development' ? '[name].js' : '[name]-[hash].js',
+        filename: NODE_ENV === 'development' ? '[name].js' : '[name]-final.js',
         publicPath: (NODE_ENV === 'development') ? '/static/build' : '/final',
         library: '[name]',
     },
 
-    plugins: [
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify('production'),
-            },
-        }),
-        new webpack.optimize.UglifyJsPlugin(),
-    ],
+
+    plugins: NODE_ENV === 'development' ?
+        [
+            new webpack.NoEmitOnErrorsPlugin(),
+        ]
+        : [
+            new webpack.NoEmitOnErrorsPlugin(),
+            new webpack.DefinePlugin({
+                'process.env': {
+                    NODE_ENV: JSON.stringify('production'),
+                },
+            }),
+            new webpack.optimize.UglifyJsPlugin(),
+        ],
 
 
     resolve: {
