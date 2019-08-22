@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit MnemoBlock Functions</title>
+    <script class="appendToEdit" src="./global_vars.js" charset="utf-8"></script>
+    <script class="appendToEdit" src="./abstract_mnemo.js" charset="utf-8"></script>
+    <script class="appendToEdit" src="./public_func.js"></script>
+    <style type="text/css" media="screen">
+        #editor { 
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <svg
+        style="display: none;"
+        xmlns="http://www.w3.org/2000/svg"
+    > 
+        <g class="Block_1" data-vars="{ &quot;properties&quot; : { &quot;KKS&quot; : { &quot;value&quot; : &quot;Test&quot; }, &quot;color&quot; : { &quot;value&quot; : &quot;#FFFF00&quot;, &quot;bindElement&quot; : 1, &quot;bindProperty&quot; : &quot;style.fill&quot; }, &quot;name&quot; : { &quot;value&quot; : &quot;Hello&quot;, &quot;bindElement&quot; : 2, &quot;bindProperty&quot; : &quot;innerHTML&quot; } }, &quot;signals&quot; : { &quot;ALA&quot; : &quot;false&quot;, &quot;ALE&quot; : &quot;0&quot; } }" id="0" name="Block_1" onclick="console.log('this');">
+            <rect height="100.0" id="1" name="vis_color" style="stroke-width: 1.0; fill: #FFFF00; stroke: #000000; " width="100.0" x="0.0" y="0.0">
+            </rect>
+            <text id="2" name="vis_name" style="font-weight: normal; font-size: 9px; font-family: Arial Narrow; font-style: normal; fill: #000000; " text-anchor="middle" x="50.0" y="52.0">
+                Hello
+            </text>
+        </g> 
+    </svg>
+    <script class="appendToEdit" src="./test.js"></script>
+<div id="editor">
+function initBlock() {
+
+}
+
+function renderBlock() {
+
+}
+</div>
+    
+<script src="./ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="./ace-builds/src-noconflict/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+<script src="./editor.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

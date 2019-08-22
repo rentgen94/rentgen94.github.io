@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Mnemo</title>
+        <script src="./common.js" charset="utf-8"></script>
+        <script src="./global_vars.js" charset="utf-8"></script>
+        <script src="./abstract_mnemo.js" charset="utf-8"></script>
+        <script src="./public_func.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <svg
+            id="preview"
+	    preserveAspectRatio="xMidYMin slice"
+	    style="width: 100%; padding-bottom: 100%; height: 1px; overflow: visible"
+	    xmlns="http://www.w3.org/2000/svg"
+        > 
+            <g class="Block_1" data-vars="{ &quot;properties&quot; : { &quot;KKS&quot; : { &quot;value&quot; : &quot;Test&quot; }, &quot;color&quot; : { &quot;value&quot; : &quot;#FFFF00&quot;, &quot;bindElement&quot; : 1, &quot;bindProperty&quot; : &quot;style.fill&quot; }, &quot;name&quot; : { &quot;value&quot; : &quot;Hello&quot;, &quot;bindElement&quot; : 2, &quot;bindProperty&quot; : &quot;innerHTML&quot; } }, &quot;signals&quot; : { &quot;ALA&quot; : &quot;false&quot;, &quot;ALE&quot; : &quot;0&quot; } }" id="0" name="Block_1" onclick="console.log('this');">
+                <rect height="100.0" id="1" name="vis_color" style="stroke-width: 1.0; fill: #FFFF00; stroke: #000000; " width="100.0" x="0.0" y="0.0">
+                </rect>
+                <text id="2" name="vis_name" style="font-weight: normal; font-size: 9px; font-family: Arial Narrow; font-style: normal; fill: #000000; " text-anchor="middle" x="50.0" y="52.0">
+                    Hello
+                </text>
+            </g> 
+
+        <!-- Split given SVG and write elements at new line               -->
+        <!-- th:block will DELETE after resolve but leaves empty line     -->
+        <!-- Because of this it starts right after SVG tag                -->
+        </svg>
+        <script src="./main_loop.js" charset="utf-8"></script>
+    </body>
+</html>

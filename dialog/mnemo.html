@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http:/www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Mnemo</title>
+        <script src="./common.js" charset="utf-8"></script>
+        <script src="./global_vars.js" charset="utf-8"></script>
+        <script src="./abstract_mnemo.js" charset="utf-8"></script>
+        <script src="./public_func.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <svg
+            id="preview"
+	    preserveAspectRatio="xMidYMin slice"
+	    style="width: 100%; padding-bottom: 100%; height: 1px; overflow: visible"
+	    xmlns="http://www.w3.org/2000/svg"
+        ><!--/*/ <th:block th:each="line: ${#strings.arraySplit(name, '\n')}">
+            <th:block th:utext="${line}"></th:block></th:block> /*/-->
+
+        <!-- Split given SVG and write elements at new line               -->
+        <!-- th:block will DELETE after resolve but leaves empty line     -->
+        <!-- Because of this it starts right after SVG tag                -->
+        </svg>
+        <script src="./main_loop.js" charset="utf-8"></script>
+    </body>
+</html>
